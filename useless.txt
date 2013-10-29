@@ -1,0 +1,9 @@
+5 ls -a
+10 ls
+hello
+3f xxx
+ 6 7 fff
+
+4 some command
+
+1 ls-al
