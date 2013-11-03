@@ -1,7 +1,8 @@
 mipt_cs
 =======
+
 Vartanian Nadezhda
 
 MIPT, 225 group
 
-check access
+This repository is created for CS home task in MIPT.
