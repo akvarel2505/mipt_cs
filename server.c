@@ -162,6 +162,7 @@ int main(int argc, char **argv)
 		printf("Thread of client %d was joined successfully\n",i+1);
 	}
 	
+	// AP: почему последнему клиенту нужно отдельно посылать сообщение?
 	struct msgbuf_str buffer[1];
 	buffer[0].mtype=4*n;
 	strcpy(buffer[0].msg, LAST_BYE_MSG);
@@ -228,6 +229,7 @@ void *routine(void *my_th_arg)
 		my_strncpy((char*)(buf2[0].info.matrices + h1*w), (char*)m2, s2);
 	}
 
+	// AP: а если матрица длинная и не уложиться в 4096? перепишите, чтобы можно было отправить матрицу (часть работы) любого размера?
 	er_rd = msgsnd(msg_q_id, &buf2, work+3*one, 0);
 	if (er_rd<0)
 	{
