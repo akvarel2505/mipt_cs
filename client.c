@@ -81,6 +81,7 @@ int main()
 	}
 	
 	(void)umask(0);
+	// AP: зачем вам shared memory?
 	int shm_id=shmget(key_shm, one, 0666|IPC_CREAT);
 	if (shm_id<0) er_hand("Can't create shared memory");
 	
