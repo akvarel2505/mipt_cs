@@ -149,6 +149,7 @@ int main()
 
 	work_with_log(fd, sem_id, my_sem_buf, client_num, "I have sent hello message to server\n");
 	
+	// AP: аналогично сереверу - а если длинная матрица? нужно уметь получать любой размер
 	er_rd = msgrcv(msg_id, &buf2, MSG_MAX, client_id+1, 0);
 	if (er_rd<0) er_hand("Can't receive message from server");
 	
@@ -186,6 +187,7 @@ int main()
 	my_strncpy(buffer[0].msg,(char*)(result), h1*h2*one);
 	buffer[0].mtype=client_id+2;
 
+	// AP: аналогично - нужно уметь отправлять результат любой длины
 	er_rd=msgsnd(msg_id, &buffer, h1*h2*one, 0);
 	if (er_rd<0) er_hand("Can't send a message with work");
 
