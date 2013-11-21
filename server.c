@@ -14,7 +14,7 @@
 #define FILE_OUT "./result.txt"
 #define FILE_IN "./source.txt"
 #define IPC_ID_MSG 1
-#define MSG_MAX 4068
+#define MSG_MAX 32   //4068
 #define HELLO_MSG "hello"
 #define BYE_MSG "bye!"
 #define LAST_BYE_MSG "bye, last client!"
@@ -47,7 +47,7 @@ struct msgbuf_matr
 		int width;
 		int height1;
 		int height2;
-		int matrices[MSG_MAX];
+		char matrices[MSG_MAX];
 	} info;
 };
 
@@ -121,7 +121,7 @@ int main(int argc, char **argv)
 		max_work = (last_user+h2)*one; //number of bytes in greatest message
 	}
 
-	if (max_work>MSG_MAX) err_hand("Too large matrices");
+//	if (max_work>MSG_MAX) err_hand("Too large matrices");
 
 	const int size_res=h1*h2;
 
@@ -161,14 +161,14 @@ int main(int argc, char **argv)
 		if (er_rd!=0) err_hand("Can't join a thread\n");
 		printf("Thread of client %d was joined successfully\n",i+1);
 	}
-	
+
 	struct msgbuf_str buffer[1];
 	buffer[0].mtype=4*n;
 	strcpy(buffer[0].msg, LAST_BYE_MSG);
 	int sz=strlen(LAST_BYE_MSG);
 	er_rd = msgsnd(msg_q_id, &buffer, sz+1, 0);
 	if (er_rd<0) err_hand("Can't send bye to last client");	
-
+	
 	free(m1);
 	free(m2);
 
@@ -222,23 +222,58 @@ void *routine(void *my_th_arg)
 	buf2[0].info.width = w;
 	buf2[0].info.height1 = h1;
 	buf2[0].info.height2 = h2;
-	if (work>0)
-	{
-		my_strncpy((char*)buf2[0].info.matrices, (char*)(m1 + user*i*w), h1*w*one);
-		my_strncpy((char*)(buf2[0].info.matrices + h1*w), (char*)m2, s2);
-	}
 
-	er_rd = msgsnd(msg_q_id, &buf2, work+3*one, 0);
-	if (er_rd<0)
-	{
-		printf("Can't send message to client No %d",i+1);
-		exit(-1);
-	}
-		
-	er_rd=msgrcv(msg_q_id, &buffer, MSG_MAX, 4*i+3, 0);
-	if (er_rd<0) err_hand("Can't receive done work from client");
+	int info_to_send=w*one*(h1+h2);
+	char *matr_buf;
+	matr_buf=(char*)malloc(info_to_send);
+	my_strncpy(matr_buf, (char*)(m1 + user*i*w), h1*w*one);
+	my_strncpy(matr_buf + h1*w*one, (char*)(m2), s2);
 
-	my_strncpy((char*)(res), buffer[0].msg, h1*h2*one);
+	
+	int pos=0;
+	int need;
+	while (pos<info_to_send)
+	{
+		if (work>0)
+		{
+			need=info_to_send-pos;
+			if (need>MSG_MAX) need=MSG_MAX;
+			my_strncpy((char*)buf2[0].info.matrices, matr_buf+pos, need);
+			pos+=need;
+		}
+
+		if (work==0)
+		{ 
+			pos=info_to_send;
+			need=0;
+		}
+
+		er_rd = msgsnd(msg_q_id, &buf2, need+3*one, 0);
+		if (er_rd<0)
+		{
+			printf("Can't send message to client No %d",i+1);
+			exit(-1);
+		}
+	}//while	
+
+	free(matr_buf);
+	
+	info_to_send=h1*h2*one;
+	matr_buf=(char*)malloc(info_to_send);
+	pos=0;
+
+	do
+	{
+		er_rd=msgrcv(msg_q_id, &buffer, MSG_MAX, 4*i+3, 0);
+		if (er_rd<0) err_hand("Can't receive done work from client");
+
+		my_strncpy(matr_buf+pos, buffer[0].msg, er_rd);
+		pos+=er_rd;
+	} while (pos<info_to_send);
+
+	my_strncpy((char*)(res), matr_buf, info_to_send);
+	free(matr_buf);
+
 	buffer[0].mtype=4*i+4;
 	if (i!=n-1)
 	{
@@ -248,8 +283,7 @@ void *routine(void *my_th_arg)
 		if (er_rd<0) printf("Can't send last message to client, errno=%d\n",errno);
 		er_rd = msgrcv(msg_q_id, &buffer, MSG_MAX, 4*i+1, 0);
 		if (er_rd<0) err_hand("Can't receive last message");
-	}
-	
+	}	
 	return NULL;
 }
 

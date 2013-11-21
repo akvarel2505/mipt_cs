@@ -14,7 +14,7 @@
 #define IPC_ID_MSG 1
 #define IPC_ID_SHM 2
 #define IPC_ID_SEM 3
-#define MSG_MAX 4068 
+#define MSG_MAX 32 //4068 
 
 struct mult
 {
@@ -41,7 +41,7 @@ struct msgbuf_matr
 		int width;
 		int height1;
 		int height2;
-		int matrices[MSG_MAX];
+		char matrices[MSG_MAX];
 	} info;
 };
 
@@ -149,33 +149,51 @@ int main()
 
 	work_with_log(fd, sem_id, my_sem_buf, client_num, "I have sent hello message to server\n");
 	
-	er_rd = msgrcv(msg_id, &buf2, MSG_MAX, client_id+1, 0);
+	er_rd = msgrcv(msg_id, &buf2, MSG_MAX+3*one, client_id+1, 0);
 	if (er_rd<0) er_hand("Can't receive message from server");
 	
-	work_with_log(fd, sem_id, my_sem_buf, client_num, "I have received work from server\n");
-
 	int h1=buf2[0].info.height1;
 	int h2=buf2[0].info.height2;
 	int w=buf2[0].info.width;
-	int *m;
-	m=buf2[0].info.matrices;	
+	void *m;
+	int rcvd=(h1+h2)*w*one;
+	m=(char*)malloc(rcvd);
+	int pos=0;
+	do
+	{
+		my_strncpy((char*)(m)+pos, (char*)buf2[0].info.matrices, er_rd-3*one);
+		pos+=(er_rd-3*one);
+
+		if (h1==0) pos=rcvd;
+
+		if (pos<rcvd)
+		{
+			er_rd = msgrcv(msg_id, &buf2, MSG_MAX+3*one, client_id+1, 0);
+			if (er_rd<0) er_hand("Can't receive message from server");
+		}		
+	} while (pos<rcvd);
+
+	work_with_log(fd, sem_id, my_sem_buf, client_num, "I have received work from server\n");
 
 	// MULTIPLICATION
 
 	struct mult job;
-	job.p1 = m;
-	job.p2 = m + h1*w;
+	job.p1 = (int*)m;
+	job.p2 = (int*)(m + h1*w*one);
 	job.wh = w;
-	int *result;
-	result=(int*)malloc(h1*h2*one);
+	void *result;
+	int total=h1*h2*one;
+	result=(int*)malloc(total);
 	
+	printf("Client %d: h1=%d h2=%d\n",client_num,h1,h2);
+
 	int i,j;
 	for (i=0; i<h1; i++)
 	{	
 		job.str1=i;
 		for (j=0; j<h2; j++)
 		{
-			job.res = result+i*h2+j;
+			job.res = (int*)((int*)(result)+i*h2+j);
 			job.stlb2 = j;
 			multiplication(&job);
 		}
@@ -183,14 +201,23 @@ int main()
 
 	work_with_log(fd, sem_id, my_sem_buf, client_num, "Hurray! I have done my work!\n");
 
-	my_strncpy(buffer[0].msg,(char*)(result), h1*h2*one);
 	buffer[0].mtype=client_id+2;
+	pos=0;
 
-	er_rd=msgsnd(msg_id, &buffer, h1*h2*one, 0);
-	if (er_rd<0) er_hand("Can't send a message with work");
+	int curr;
+	do
+	{
+		curr=total-pos;
+		if (curr>MSG_MAX) curr=MSG_MAX;
+
+		my_strncpy(buffer[0].msg, (char*)(result)+pos, curr);
+		pos+=curr;
+		er_rd=msgsnd(msg_id, &buffer, curr, 0);
+		if (er_rd<0) er_hand("Can't send a message with work");
+	} while (pos<total);
 
 	free(result);
-
+	free(m);
 	work_with_log(fd, sem_id, my_sem_buf, client_num, "I have sent my work to server\n");
 
 	er_rd=msgrcv(msg_id, &buffer, MSG_MAX, client_id+3, 0);
