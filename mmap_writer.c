@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 	key_t key=ftok(FTOK_FILE, 1);
 	if (key<0) err_hand("Can't generate a key!");
 	(void)umask(0);
-	int msg_id=msgget(key, 0777|IPC_CREAT);	
+	int msg_id=msgget(key, 0666|IPC_CREAT);	
 	if (msg_id<0) err_hand("Can't get access to message queue");
 	struct my_msgbuf my_msg;
 	my_msg.mtype=1;	
