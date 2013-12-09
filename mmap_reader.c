@@ -31,6 +31,7 @@ int main()
 
 	void *map_file;
 	off_t PG_SZ=sysconf(_SC_PAGE_SIZE);
+	// AP: а почему вы используете именно 2 страницы памяти, а например не какой-то свой произвольный размер буфера?
 	map_file=mmap(NULL, 2*PG_SZ, PROT_READ, MAP_SHARED, fd, 0);
 	if ((map_file+1)==NULL) err_hand("Can't map file in memory");
 	int position=0;
@@ -42,6 +43,7 @@ int main()
 	if (key<0) err_hand("Can't generate a key");
 
 	(void)umask(0);
+	// AP: а что означает "исполнение" для очереди сообщений?
 	int msg_id=msgget(key,0777|IPC_CREAT);
 	if (msg_id<0) err_hand("Cant get access to message queue");
 
