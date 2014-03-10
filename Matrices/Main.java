@@ -1,4 +1,3 @@
-
 import java.util.Scanner;
 public class Main {
 
@@ -7,8 +6,9 @@ public class Main {
 		System.out.println("Hello! We'll work with vectors and matrices");
 		
 		//the first matrix for our experiments - non-square
-		System.out.println("The matrix from matrix1.txt:");		
-		Matrix first=WorkWithMatrices.readFromFile("C:\\Users\\Пользователь\\Documents\\Eclipse Projects\\Matrices\\bin\\matrix1.txt");
+		System.out.println("The matrix from matrix1.txt:");	
+		// AP: Р·РґРµСЃСЊ Рё РґР°Р»РµРµ СЃРєРѕСЂРµРµ РІСЃРµРіРѕ Сѓ РјРµРЅСЏ РґСЂСѓРіРѕР№ РїСѓС‚СЊ Рє С„Р°С†Р»Сѓ - Рё СЂР°Р±РѕС‚Р°С‚СЊ РЅРµ Р±СѓРґРµС‚ - СЃРґРµР»Р°Р№С‚Рµ СѓРЅРёРІРµСЂСЃР°Р»СЊРЅРѕ
+		Matrix first=WorkWithMatrices.readFromFile("C:\\Users\\пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\\Documents\\Eclipse Projects\\Matrices\\bin\\matrix1.txt");
 		first.println();
 		
 		Scanner currIn=new Scanner(System.in);
@@ -32,7 +32,7 @@ public class Main {
 				
 		
 		System.out.println("The matrix from matrix2.txt:");		
-		Matrix second=WorkWithMatrices.readFromFile("C:\\Users\\Пользователь\\Documents\\Eclipse Projects\\Matrices\\bin\\matrix2.txt");
+		Matrix second=WorkWithMatrices.readFromFile("C:\\Users\\пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\\Documents\\Eclipse Projects\\Matrices\\bin\\matrix2.txt");
 		second.println();
 	
 		System.out.println("Diagonal (if possible):");
@@ -43,8 +43,8 @@ public class Main {
 		
 		
 		System.out.println("The matrices for multiplication:");		
-		Matrix A=WorkWithMatrices.readFromFile("C:\\Users\\Пользователь\\Documents\\Eclipse Projects\\Matrices\\bin\\matrix3.txt");
-		Matrix B=WorkWithMatrices.readFromFile("C:\\Users\\Пользователь\\Documents\\Eclipse Projects\\Matrices\\bin\\matrix4.txt");
+		Matrix A=WorkWithMatrices.readFromFile("C:\\Users\\пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\\Documents\\Eclipse Projects\\Matrices\\bin\\matrix3.txt");
+		Matrix B=WorkWithMatrices.readFromFile("C:\\Users\\пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\\Documents\\Eclipse Projects\\Matrices\\bin\\matrix4.txt");
 		A.println();
 		System.out.println();
 		B.println();
