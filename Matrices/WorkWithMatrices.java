@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class WorkWithMatrices{
 
-	//домножить всю матрицу на коэффициент
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	public static Matrix multiplyFactor(Matrix A, byte k){
 		int i;
 		Matrix res=new Matrix(A.n, A.m);
@@ -12,7 +12,7 @@ public class WorkWithMatrices{
 		return res;
 	}
 	
-	//вычисление определителя квадратной матрицы
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	public static int determinant(Matrix A){
 		if (A.n==A.m){
 			Matrix B=new Matrix(A.n, A.n);
@@ -29,7 +29,7 @@ public class WorkWithMatrices{
 		} //error
 	}
 	
-	//вычисление следа квадратной матрицы
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		public static int trace(Matrix A){
 			if (A.n==A.m){
 				int i;
@@ -43,6 +43,7 @@ public class WorkWithMatrices{
 			}
 		}
 		
+		// AP: РїРѕС‡РµРјСѓ РёРјРµРЅР° Р°СЂРіСѓРјРµРЅС‚РѕРІ СЃ Р±РѕР»СЊС€РѕР№ Р±СѓРєРІС‹?
 	public static Matrix multiplication(Matrix A, Matrix B){
 		// (1) A,B (2) At,B 
 		// (3) A,Bt (4) At,Bt
@@ -60,7 +61,8 @@ public class WorkWithMatrices{
 			else flag=1;			
 		}
 		
-		// проверяем размеры
+		// AP: СЃС‚РѕР»СЊРєРѕ ifРѕРІ - СЌС‚Рѕ РЅРµ РѕР±СЉРµРєС‚РЅРѕ-РѕСЂРёРµС‚РЅРёСЂРѕРІР°РЅРЅРѕ - РїСЂРµРґР»РѕР¶РёС‚Рµ РїСЂР°РІРёР»СЊРЅРѕРµ СЂРµС€РµРЅРёРµ
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		if (flag==1){
 			if (A.m!=B.n) {
 				ErrorHandler.error("Incorrect sizes of the matrices");
@@ -114,37 +116,37 @@ public class WorkWithMatrices{
 		return res;
 	}
 	
-	//вектор после матрицы
+	//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	public static Vector multiplication(Matrix A, Vector a){
 		if ((a.n!=A.n)&&(a.n!=A.m)){ //error
 				ErrorHandler.error("Incorrect sizes of the matrix and vector");
 			}
-		if (A.n==A.m){ //нужно учесть, транспонирована матрица, или нет
+		if (A.n==A.m){ //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅ
 			Vector res=new Vector(A.n);
 			for (int i=0; i<A.n; i++) res.x[i]=WorkWithVectors.scalarProduct(A.getLine(i),a);
 			return res;
 		}
-		//не квадратная матрица
+		//пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		else return multiplicationNonSquare(A,a);
 	}
 	
-	//вектор перед матрицей
+	//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	public static Vector multiplication(Vector a, Matrix A){
 		if ((a.n!=A.n)&&(a.n!=A.m)){ //error
 				ErrorHandler.error("Incorrect sizes of the matrix and vector");
 			}
-		if (A.n==A.m){ //нужно учесть, транспонирована матрица, или нет
+		if (A.n==A.m){ //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅ
 			Vector res=new Vector(A.n);
 			for (int i=0; i<A.n; i++) res.x[i]=WorkWithVectors.scalarProduct(A.getColumn(i),a);
 			return res;
 		}
-		//не квадратная матрица
+		//пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		else return multiplicationNonSquare(A,a);
 	}
 	
 	private static Vector multiplicationNonSquare(Matrix A, Vector a){
-		//здесь уже гарантируется, что входные данные корректны
-		// по размерам автоматически подбираем, с какой стороны умножать
+		//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		// пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		
 		Vector res;
 		int i;
