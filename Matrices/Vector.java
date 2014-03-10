@@ -1,6 +1,6 @@
-
 public class Vector {
 	
+	// AP: здесьи везде - если final - то это не значит, что модификатор доступа не нужно указывать)
 	final public int n;    // dimensions
 	public int x[];				//components
 	
