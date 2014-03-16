@@ -1,4 +1,13 @@
+
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.lang.ArrayIndexOutOfBoundsException;
 import java.util.Scanner;
+
+import ru.mipt.cs.linearAlgebra.ErrorHandler;
+import ru.mipt.cs.linearAlgebra.Matrix;
+import ru.mipt.cs.linearAlgebra.WorkWithMatrices;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -6,9 +15,14 @@ public class Main {
 		System.out.println("Hello! We'll work with vectors and matrices");
 		
 		//the first matrix for our experiments - non-square
+		Matrix first;
+		
 		System.out.println("The matrix from matrix1.txt:");	
-		// AP: здесь и далее скорее всего у меня другой путь к фацлу - и работать не будет - сделайте универсально
-		Matrix first=WorkWithMatrices.readFromFile("C:\\Users\\������������\\Documents\\Eclipse Projects\\Matrices\\bin\\matrix1.txt");
+		try{
+			first=WorkWithMatrices.readFromFile("matrix1.txt");
+		
+		
+		
 		first.println();
 		
 		Scanner currIn=new Scanner(System.in);
@@ -16,7 +30,14 @@ public class Main {
 		int k;
 		System.out.println("Enter the number of line");
 		k=currIn.nextInt();
-		first.getLine(k).println();
+		
+		try{
+			first.getLine(k).println();
+		}
+		catch (ArrayIndexOutOfBoundsException e){
+			e.printStackTrace();
+			ErrorHandler.error("Are you sure that the line really exists? The matrix is above ^_^");
+		}
 		
 		System.out.println("Transposed:");
 		first.transpose();
@@ -25,26 +46,30 @@ public class Main {
 		first.getLine(k).println();
 		
 		first.transpose();
+		
+
 		first.toDiagonal();
 		first.println();
-		
 		//the second matrix for our experiments - square
 				
 		
-		System.out.println("The matrix from matrix2.txt:");		
-		Matrix second=WorkWithMatrices.readFromFile("C:\\Users\\������������\\Documents\\Eclipse Projects\\Matrices\\bin\\matrix2.txt");
-		second.println();
+		System.out.println("The matrix from matrix2.txt:");
+		Matrix second;
+		second=WorkWithMatrices.readFromFile("matrix2.txt");
 	
-		System.out.println("Diagonal (if possible):");
-		second.toDiagonal();
 		second.println();
 		
 		System.out.println("Determinant: "+WorkWithMatrices.determinant(second));
+				
+		System.out.println("Diagonal:");
+		second.println();
 		
+		System.out.println("The matrices for multiplication:");
+		Matrix A,B;
+			A=WorkWithMatrices.readFromFile("matrix3.txt");
+			B=WorkWithMatrices.readFromFile("matrix4.txt");
+
 		
-		System.out.println("The matrices for multiplication:");		
-		Matrix A=WorkWithMatrices.readFromFile("C:\\Users\\������������\\Documents\\Eclipse Projects\\Matrices\\bin\\matrix3.txt");
-		Matrix B=WorkWithMatrices.readFromFile("C:\\Users\\������������\\Documents\\Eclipse Projects\\Matrices\\bin\\matrix4.txt");
 		A.println();
 		System.out.println();
 		B.println();
@@ -52,9 +77,25 @@ public class Main {
 		
 		Matrix C=WorkWithMatrices.multiplication(B,A);
 		C.println();		
-		
 		currIn.close();
-		System.out.println("The work of the program is over");
+		}
+		catch (ArrayIndexOutOfBoundsException e){
+			e.printStackTrace();
+			ErrorHandler.error("Wrong data about sizes of matrices in the file");
+		}
+		catch (FileNotFoundException e){
+			e.printStackTrace();
+			ErrorHandler.error("Are you sure that file really exists?");
+		}
+		catch (IOException e){
+			e.printStackTrace();
+			ErrorHandler.error("Something is wrong with the file...");
+		}
+		finally{
+			System.out.println("The work of the program is over");
+		}
+		
+		
 	}
 
 }

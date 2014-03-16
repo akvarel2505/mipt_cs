@@ -1,3 +1,5 @@
+package ru.mipt.cs.linearAlgebra;
+
 
 public class ErrorHandler {
 	

@@ -1,5 +1,6 @@
+package ru.mipt.cs.linearAlgebra;
 
-public class Matrix {
+public class Matrix{
 	
 	private boolean ifTransposed;
 	final public int n,m; // size: n lines, m columns
@@ -20,15 +21,14 @@ public class Matrix {
 	}
 	
 	//получить элемент матрицы
-	public int get(int i, int j){
-		//errors!!!
+	public int get(int i, int j) throws ArrayIndexOutOfBoundsException{
+		
 		if (!ifTransposed) return this.line[i].x[j];
 		else return this.line[j].x[i];
 	}
 	
 	//set an element of matrix
-	public void set(int i, int j, int value){
-		//errors!!!
+	public void set(int i, int j, int value) throws ArrayIndexOutOfBoundsException{
 		if (!ifTransposed) this.line[i].x[j]=value;
 		else this.line[j].x[i]=value;
 	}
@@ -52,34 +52,19 @@ public class Matrix {
 	}
 	
 	//получить один из составляющих векторов
-	public Vector getMainLine(int i){
+	public Vector getMainLine(int i) throws ArrayIndexOutOfBoundsException{
 		Vector res=new Vector(this.n);
-		try {
-			res=this.line[i];
-		}
-		catch (ArrayIndexOutOfBoundsException e){
-			ErrorHandler.error("Demand of absent line"); //error
-		}
-		finally{
-			return res;
-		}
+		res=this.line[i];
+		return res;
 	}
 	
 	//установить составляющиий вектор
-	public void setMainLine(int i, Vector a){
-		try{
+	public void setMainLine(int i, Vector a) throws ArrayIndexOutOfBoundsException, ArrayStoreException{
 			this.line[i]=a;
-		}
-		catch (ArrayIndexOutOfBoundsException e1){
-			ErrorHandler.error("Demand of absent line"); //error
-		}
-		catch (ArrayStoreException e2){
-			ErrorHandler.error("Wrong vector dimension"); //error
-		}
 	}
 	
 	//получить строку; если матрица не транспонирована, то это - одно и то же с getMainLine()
-	public Vector getLine(int n){
+	public Vector getLine(int n) throws ArrayIndexOutOfBoundsException{
 		
 		Vector res;
 		if (!ifTransposed) {			
@@ -89,25 +74,19 @@ public class Matrix {
 			res = new Vector(this.n); 
 		}
 		
-		try{
-			if (ifTransposed) {
-				int i;
-				for (i=0; i<this.n; i++) res.x[i]=this.line[i].x[n];
-			}
-			else{
+		if (ifTransposed) {
+			int i;
+			for (i=0; i<this.n; i++) res.x[i]=this.line[i].x[n];
+		}
+		else{
 			res = this.line[n]; 
-			}
 		}
-		catch (ArrayIndexOutOfBoundsException e){
-			ErrorHandler.error("Demand of absent line"); //error
-		} 
-		finally {
-			return res;
-		}
+		return res;
 	}
 	
 	//get a column
-	public Vector getColumn(int n){
+	public Vector getColumn(int n) throws ArrayIndexOutOfBoundsException{
+		
 		Vector res;
 		if (ifTransposed) {			
 			res=new Vector(this.n);
@@ -116,24 +95,19 @@ public class Matrix {
 			res = new Vector(this.m); 
 		}
 		
-		try{
 			if (!ifTransposed) {
 				int i;
 				for (i=0; i<this.n; i++) res.x[i]=this.line[i].x[n];
 			}
 			else res=this.line[n];
-		}
-		catch (ArrayIndexOutOfBoundsException e){
-			ErrorHandler.error("Demand of absent column"); //error
-		} 
-		finally {
-			return res;
-		}
+	 
+		return res;
+		
 	}
 	
-	public void swapLines(int i, int j){
+	public void swapLines(int i, int j) throws ArrayIndexOutOfBoundsException{
 		
-		try{
+		
 			if (ifTransposed) {
 				int k,buf;
 				for (k=0; k<this.n; k++) {
@@ -142,21 +116,17 @@ public class Matrix {
 					this.line[k].x[j]=buf;
 				}
 		
-		}
+			}
 			else{
 				Vector buffer=new Vector(this.m);
 				buffer=this.line[i];
 				this.line[i]=this.line[j];
 				this.line[j]=buffer;
 			}
-		}
-		catch (ArrayIndexOutOfBoundsException e){
-			ErrorHandler.error("Demand of absent line"); //error
-		} 
 	}
 	
-	public void swapColumns(int i, int j){
-		try{
+	public void swapColumns(int i, int j) throws ArrayIndexOutOfBoundsException{
+		
 			if (!ifTransposed) {
 			
 				int k,buf;
@@ -164,8 +134,7 @@ public class Matrix {
 					buf=this.line[k].x[i];
 					this.line[k].x[i]=this.line[k].x[j];
 					this.line[k].x[j]=buf;
-				}
-			
+				}	
 			}
 			else{
 			
@@ -174,10 +143,6 @@ public class Matrix {
 				this.line[i]=this.line[j];
 				this.line[j]=buffer;
 			}
-		}
-		catch (ArrayIndexOutOfBoundsException e){
-			ErrorHandler.error("Demand of absent line"); //error
-		} 
 	}
 	
 	//привести матрицу к диагональному виду; возвращаем то, на что был домножен определитель
