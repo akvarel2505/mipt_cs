@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class Vector {
 	
 	final public int n;    // dimensions
+	// AP: лучше private
 	public int x[];				//components
 	
 	public Vector(int dim){
